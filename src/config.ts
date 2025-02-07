@@ -8,6 +8,11 @@ export type DriverHook = (
   opts: { config: Config; state: State; driver: Driver }
 ) => void;
 
+export enum EnumHightlightType {
+  AREA = "area",
+  DASHED = "dashed",
+}
+
 export type Config = {
   steps?: DriveStep[];
 
@@ -18,7 +23,17 @@ export type Config = {
   allowClose?: boolean;
   overlayClickBehavior?: "close" | "nextStep";
   stagePadding?: number;
+  stageTopPadding?: number;
+  stageLeftPadding?: number;
+  stageRightPadding?: number;
+  stageBottomPadding?: number;
   stageRadius?: number;
+  hightlightType?: EnumHightlightType;
+  lineColor?: string;
+  lineWidth?: string;
+  lineMargin?: string;
+  lineDashArray?: string;
+  hiddenArrow?: boolean;
 
   disableActiveInteraction?: boolean;
 
@@ -66,11 +81,15 @@ export function configure(config: Config = {}) {
     disableActiveInteraction: false,
     showProgress: false,
     stagePadding: 10,
-    stageRadius: 5,
-    popoverOffset: 10,
+    stageRadius: 12,
+    popoverOffset: 8,
     showButtons: ["next", "previous", "close"],
     disableButtons: [],
+    lineDashArray: "6 4",
+    lineWidth: "3",
     overlayColor: "#000",
+    hightlightType: EnumHightlightType.AREA,
+    hiddenArrow: true,
     ...config,
   };
 }

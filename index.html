@@ -350,7 +350,7 @@ npm install driver.js</pre
       </p>
     </div>
     <script type="module">
-      import { driver } from "./src/driver.ts";
+      import { driver, EnumHightlightType } from "./src/driver.ts";
 
       const basicTourSteps = [
         {
@@ -417,6 +417,7 @@ npm install driver.js</pre
           animate: false,
           overlayColor: "blue",
           overlayOpacity: 0.3,
+          
           showProgress: true,
           steps: basicTourSteps,
         });
@@ -941,6 +942,17 @@ npm install driver.js</pre
           animate: true,
           popoverOffset: 10,
           stagePadding: 10,
+          stageRadius: 12,
+          stageTopPadding: 0,
+          stageLeftPadding: 50,
+          stageRightPadding: 0,
+          stageBottompadding: 0,
+          hightlightType: EnumHightlightType.DASHED,
+          overlayOpacity: 1,
+          // lineDashArray: "5 5", 
+          // popoverOffset: 0,
+          hiddenArrow: false,
+          overlayColor: "rgba(0, 0, 0, 0.80)",
           onDeselected: (element, step) => {
             console.log("Deselected element", element, step);
           },

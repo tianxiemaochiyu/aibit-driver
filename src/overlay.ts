@@ -1,7 +1,7 @@
 import { easeInOutQuad } from "./utils";
 import { onDriverClick } from "./events";
 import { emit } from "./emitter";
-import { getConfig } from "./config";
+import { getConfig, EnumHightlightType } from "./config";
 import { getState, setState } from "./state";
 
 export type StageDefinition = {
@@ -111,6 +111,8 @@ function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
   const windowX = window.innerWidth;
   const windowY = window.innerHeight;
 
+  const hightlightStyle = getConfig("hightlightType") || EnumHightlightType.AREA
+
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.classList.add("driver-overlay", "driver-overlay-animated");
 
@@ -142,6 +144,24 @@ function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
 
   svg.appendChild(stagePath);
 
+  // 绘制高亮虚线
+  if (hightlightStyle === EnumHightlightType.DASHED) {
+    const stageDashedPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    
+    stageDashedPath.setAttribute("d", generateDashedStageSvgPathString(stage));
+
+    const lineColor = getConfig("lineColor") || "rgba(0, 0, 0, 0.50)";
+    const lineWidth = getConfig("lineWidth") || "3";
+    const lineDashArray = getConfig("lineDashArray") || "8 8";
+
+    stageDashedPath.style.fill = "none";
+    stageDashedPath.style.stroke = lineColor;
+    stageDashedPath.style.strokeWidth = lineWidth;
+    stageDashedPath.style.strokeDasharray = lineDashArray
+
+    svg.appendChild(stageDashedPath);
+  }
+
   return svg;
 }
 
@@ -149,11 +169,18 @@ function generateStageSvgPathString(stage: StageDefinition) {
   const windowX = window.innerWidth;
   const windowY = window.innerHeight;
 
+
+
   const stagePadding = getConfig("stagePadding") || 0;
   const stageRadius = getConfig("stageRadius") || 0;
 
-  const stageWidth = stage.width + stagePadding * 2;
-  const stageHeight = stage.height + stagePadding * 2;
+  const stageTopPadding = getConfig("stageTopPadding") || stagePadding;
+  const stageLeftPadding = getConfig("stageLeftPadding") || stagePadding;
+  const stageRightPadding = getConfig("stageRightPadding") || stagePadding;
+  const stageBottomPadding = getConfig("stageBottomPadding") || stagePadding;
+
+  const stageWidth = stage.width + stageLeftPadding + stageRightPadding;
+  const stageHeight = stage.height + stageTopPadding + stageBottomPadding;
 
   // prevent glitches when stage is too small for radius
   const limitedRadius = Math.min(stageRadius, stageWidth / 2, stageHeight / 2);
@@ -161,13 +188,41 @@ function generateStageSvgPathString(stage: StageDefinition) {
   // no value below 0 allowed + round down
   const normalizedRadius = Math.floor(Math.max(limitedRadius, 0));
 
-  const highlightBoxX = stage.x - stagePadding + normalizedRadius;
-  const highlightBoxY = stage.y - stagePadding;
+  const highlightBoxX = stage.x - stageLeftPadding + normalizedRadius;
+  const highlightBoxY = stage.y - stageTopPadding;
   const highlightBoxWidth = stageWidth - normalizedRadius * 2;
   const highlightBoxHeight = stageHeight - normalizedRadius * 2;
 
   return `M${windowX},0L0,0L0,${windowY}L${windowX},${windowY}L${windowX},0Z
     M${highlightBoxX},${highlightBoxY} h${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},${normalizedRadius} v${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},${normalizedRadius} h-${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},-${normalizedRadius} v-${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},-${normalizedRadius} z`;
+}
+
+// 高亮虚线圈
+function generateDashedStageSvgPathString(stage: StageDefinition) {
+
+  const stagePadding = getConfig("stagePadding") || 0;
+  const stageRadius = getConfig("stageRadius") || 0;
+
+  const stageTopPadding = getConfig("stageTopPadding") || stagePadding;
+  const stageLeftPadding = getConfig("stageLeftPadding") || stagePadding;
+  const stageRightPadding = getConfig("stageRightPadding") || stagePadding;
+  const stageBottomPadding = getConfig("stageBottomPadding") || stagePadding;
+
+  const stageWidth = stage.width + stageLeftPadding + stageRightPadding;
+  const stageHeight = stage.height + stageTopPadding + stageBottomPadding
+
+  // prevent glitches when stage is too small for radius
+  const limitedRadius = Math.min(stageRadius, stageWidth / 2, stageHeight / 2);
+
+  // no value below 0 allowed + round down
+  const normalizedRadius = Math.floor(Math.max(limitedRadius, 0));
+
+  const highlightBoxX = stage.x - stageLeftPadding + normalizedRadius + 1;
+  const highlightBoxY = stage.y - stageTopPadding + 1;
+  const highlightBoxWidth = stageWidth - normalizedRadius * 2 - 1 * 2;
+  const highlightBoxHeight = stageHeight - normalizedRadius * 2 - 1 * 2;
+
+  return `M${highlightBoxX},${highlightBoxY} h${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},${normalizedRadius} v${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},${normalizedRadius} h-${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},-${normalizedRadius} v-${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},-${normalizedRadius} z`;
 }
 
 export function destroyOverlay() {

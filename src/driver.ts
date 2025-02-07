@@ -7,6 +7,8 @@ import { destroyEmitter, listen } from "./emitter";
 import { getState, resetState, setState } from "./state";
 import "./driver.css";
 
+export * from "./config"
+
 export type DriveStep = {
   element?: string | Element | (() => Element);
   onHighlightStarted?: DriverHook;
