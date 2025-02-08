@@ -90,7 +90,7 @@ function mountOverlay(stagePosition: StageDefinition) {
 }
 
 function renderOverlay(stagePosition: StageDefinition) {
-  debugger
+  
   const overlaySvg = getState("__overlaySvg");
 
   // TODO: cancel rendering if element is not visible

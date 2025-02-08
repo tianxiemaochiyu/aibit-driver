@@ -941,16 +941,18 @@ npm install driver.js</pre
       document.getElementById("highlight-btn").addEventListener("click", () => {
         const driverObj = driver({
           animate: true,
-          popoverOffset: 10,
+          popoverOffset: 8,
           stagePadding: 10,
           stageRadius: 12,
-          stageTopPadding: 0,
-          stageLeftPadding: 50,
-          stageRightPadding: 0,
-          stageBottompadding: 0,
+          stageTopPadding: 10,
+          stageLeftPadding: 10,
+          stageRightPadding: 10,
+          stageBottompadding: 10,
           hightlightType: EnumHightlightType.DASHED,
           overlayOpacity: 1,
           overlayClickBehavior: false,
+
+          disableActiveInteraction: true,
           // lineDashArray: "5 5", 
           // popoverOffset: 0,
           hiddenArrow: false,
