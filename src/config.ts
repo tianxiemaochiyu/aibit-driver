@@ -1,5 +1,5 @@
 import { Driver, DriveStep } from "./driver";
-import { AllowedButtons, PopoverDOM } from "./popover";
+import { PopoverDOM } from "./popover";
 import { State } from "./state";
 
 export type DriverHook = (
