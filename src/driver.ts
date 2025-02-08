@@ -1,4 +1,4 @@
-import { AllowedButtons, destroyPopover, Popover } from "./popover";
+import { destroyPopover, Popover } from "./popover";
 import { destroyOverlay } from "./overlay";
 import { destroyEvents, initEvents, requireRefresh } from "./events";
 import { Config, configure, DriverHook, getConfig, getCurrentDriver, setCurrentDriver } from "./config";
@@ -16,6 +16,7 @@ export type DriveStep = {
   onDeselected?: DriverHook;
   popover?: Popover;
   disableActiveInteraction?: boolean;
+  template?: string;
 };
 
 export interface Driver {
@@ -173,6 +174,7 @@ export function driver(options: Config = {}): Driver {
 
     listen("overlayClick", handleOverlayClick);
     listen("escapePress", handleClose);
+    listen("closeClick", handleClose);
     listen("arrowLeftPress", handleArrowLeft);
     listen("arrowRightPress", handleArrowRight);
   }
@@ -196,27 +198,30 @@ export function driver(options: Config = {}): Driver {
 
     const currentStep = steps[stepIndex];
     const hasNextStep = steps[stepIndex + 1];
-    const hasPreviousStep = steps[stepIndex - 1];
+    // const hasPreviousStep = steps[stepIndex - 1];
 
-    const doneBtnText = currentStep.popover?.doneBtnText || getConfig("doneBtnText") || "Done";
-    const allowsClosing = getConfig("allowClose");
-    const showProgress =
-      typeof currentStep.popover?.showProgress !== "undefined"
-        ? currentStep.popover?.showProgress
-        : getConfig("showProgress");
-    const progressText = currentStep.popover?.progressText || getConfig("progressText") || "{{current}} of {{total}}";
-    const progressTextReplaced = progressText
-      .replace("{{current}}", `${stepIndex + 1}`)
-      .replace("{{total}}", `${steps.length}`);
+    // const doneBtnText = currentStep.popover?.doneBtnText || getConfig("doneBtnText") || "Done";
+    // const allowsClosing = getConfig("allowClose");
+    // const showProgress =
+    //   typeof currentStep.popover?.showProgress !== "undefined"
+    //     ? currentStep.popover?.showProgress
+    //     : getConfig("showProgress");
+    // const progressText = currentStep.popover?.progressText || getConfig("progressText") || "{{current}} of {{total}}";
+    // const progressTextReplaced = progressText
+    //   .replace("{{current}}", `${stepIndex + 1}`)
+    //   .replace("{{total}}", `${steps.length}`);
 
-    const configuredButtons = currentStep.popover?.showButtons || getConfig("showButtons");
-    const calculatedButtons: AllowedButtons[] = [
-      "next",
-      "previous",
-      ...(allowsClosing ? ["close" as AllowedButtons] : []),
-    ].filter(b => {
-      return !configuredButtons?.length || configuredButtons.includes(b as AllowedButtons);
-    }) as AllowedButtons[];
+    // const configuredButtons = currentStep.popover?.showButtons || getConfig("showButtons");
+    // const calculatedButtons: AllowedButtons[] = [
+    //   "next",
+    //   "previous",
+    //   ...(allowsClosing ? ["close" as AllowedButtons] : []),
+    // ].filter(b => {
+    //   return !configuredButtons?.length || configuredButtons.includes(b as AllowedButtons);
+    // }) as AllowedButtons[];
+
+    const totalIndex = steps.length
+    const currentIndex = stepIndex + 1
 
     const onNextClick = currentStep.popover?.onNextClick || getConfig("onNextClick");
     const onPrevClick = currentStep.popover?.onPrevClick || getConfig("onPrevClick");
@@ -225,11 +230,14 @@ export function driver(options: Config = {}): Driver {
     highlight({
       ...currentStep,
       popover: {
-        showButtons: calculatedButtons,
-        nextBtnText: !hasNextStep ? doneBtnText : undefined,
-        disableButtons: [...(!hasPreviousStep ? ["previous" as AllowedButtons] : [])],
-        showProgress: showProgress,
-        progressText: progressTextReplaced,
+        // showButtons: calculatedButtons,
+        // nextBtnText: !hasNextStep ? doneBtnText : undefined,
+        // disableButtons: [...(!hasPreviousStep ? ["previous" as AllowedButtons] : [])],
+        // showProgress: showProgress,
+        // progressText: progressTextReplaced,
+
+        currentIndex,
+        totalIndex,
         onNextClick: onNextClick
           ? onNextClick
           : () => {
@@ -361,9 +369,9 @@ export function driver(options: Config = {}): Driver {
         ...step,
         popover: step.popover
           ? {
-              showButtons: [],
-              showProgress: false,
-              progressText: "",
+              // showButtons: [],
+              // showProgress: false,
+              // progressText: "",
               ...step.popover!,
             }
           : undefined,

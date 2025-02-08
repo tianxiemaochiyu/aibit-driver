@@ -39,7 +39,6 @@ export function highlight(step: DriveStep) {
   if (!elemObj) {
     elemObj = mountDummyElement();
   }
-
   transferHighlight(elemObj, step);
 }
 

@@ -42,14 +42,15 @@ export type Config = {
   // Popover specific configuration
   popoverClass?: string;
   popoverOffset?: number;
-  showButtons?: AllowedButtons[];
-  disableButtons?: AllowedButtons[];
-  showProgress?: boolean;
+  // template
+  // showButtons?: AllowedButtons[];
+  // disableButtons?: AllowedButtons[];
+  // showProgress?: boolean;
 
   // Button texts
-  progressText?: string;
+  // progressText?: string;
   nextBtnText?: string;
-  prevBtnText?: string;
+  // prevBtnText?: string;
   doneBtnText?: string;
 
   // Called after the popover is rendered
@@ -79,12 +80,12 @@ export function configure(config: Config = {}) {
     overlayOpacity: 0.7,
     smoothScroll: false,
     disableActiveInteraction: false,
-    showProgress: false,
+    // showProgress: false,
     stagePadding: 10,
     stageRadius: 12,
     popoverOffset: 8,
-    showButtons: ["next", "previous", "close"],
-    disableButtons: [],
+    // showButtons: ["next", "previous", "close"],
+    // disableButtons: [],
     lineDashArray: "6 4",
     lineWidth: "3",
     overlayColor: "#000",

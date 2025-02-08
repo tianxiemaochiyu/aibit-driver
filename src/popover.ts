@@ -15,17 +15,19 @@ export type Popover = {
   side?: Side;
   align?: Alignment;
 
-  showButtons?: AllowedButtons[];
-  showProgress?: boolean;
-  disableButtons?: AllowedButtons[];
+  // showButtons?: AllowedButtons[];
+  // showProgress?: boolean;
+  // disableButtons?: AllowedButtons[];
 
   popoverClass?: string;
-
+  totalIndex: number;
+  currentIndex: number;
   // Button texts
-  progressText?: string;
+  // progressText?: string;
   doneBtnText?: string;
   nextBtnText?: string;
-  prevBtnText?: string;
+  width?: string;
+  // prevBtnText?: string;
 
   // Called after the popover is rendered
   onPopoverRender?: (popover: PopoverDOM, opts: { config: Config; state: State; driver: Driver }) => void;
@@ -69,15 +71,37 @@ export function renderPopover(element: Element, step: DriveStep) {
 
   const {
     // title,
-    // description,
+    description,
+    currentIndex,
+    totalIndex,
+    width,
     // showButtons,
     // disableButtons,
     // showProgress,
 
-    // nextBtnText = getConfig("nextBtnText") || "Next &rarr;",
-    // prevBtnText = getConfig("prevBtnText") || "&larr; Previous",
+    nextBtnText = getConfig("nextBtnText") || "Next",
+    doneBtnText = getConfig("doneBtnText") || "Done",
     // progressText = getConfig("progressText") || "{current} of {total}",
   } = step.popover || {};
+
+  const {
+    template,
+  } = step || {}
+
+  if (template) {
+    popover.wrapper.innerHTML = template;
+  } else {
+    popover.wrapper.innerHTML = `
+      <div class="popover-body" style="${width ? `width: ${width}px` : ''}">
+        ${totalIndex ? `<div class="progress"><span class="current">${currentIndex}</span> / ${totalIndex}</div>` : ''}
+        <div class="desc">${description}</div>
+        <div class="button-group">
+          <button class="done-button driver-popover-close-btn">${doneBtnText}</button>
+          ${totalIndex && totalIndex != currentIndex ? `<button class="next-button driver-popover-next-btn">${nextBtnText}</button>` : ''}
+        </div>
+      </div>
+    `
+  }
 
   // popover.nextButton.innerHTML = nextBtnText;
   // popover.previousButton.innerHTML = prevBtnText;

@@ -90,6 +90,7 @@ function mountOverlay(stagePosition: StageDefinition) {
 }
 
 function renderOverlay(stagePosition: StageDefinition) {
+  debugger
   const overlaySvg = getState("__overlaySvg");
 
   // TODO: cancel rendering if element is not visible
@@ -99,12 +100,21 @@ function renderOverlay(stagePosition: StageDefinition) {
     return;
   }
 
+
   const pathElement = overlaySvg.firstElementChild as SVGPathElement | null;
   if (pathElement?.tagName !== "path") {
     throw new Error("no path element found in stage svg");
   }
-
   pathElement.setAttribute("d", generateStageSvgPathString(stagePosition));
+
+  const hightlightStyle = getConfig("hightlightType") || EnumHightlightType.AREA
+  if (hightlightStyle === EnumHightlightType.DASHED) {
+    const pathElementDashed = overlaySvg.lastElementChild as SVGPathElement | null;
+    if (pathElementDashed?.tagName !== "path") {
+      throw new Error("no path element found in stage svg");
+    }
+    pathElementDashed.setAttribute("d", generateDashedStageSvgPathString(stagePosition));
+  }
 }
 
 function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
@@ -222,7 +232,7 @@ function generateDashedStageSvgPathString(stage: StageDefinition) {
   const highlightBoxWidth = stageWidth - normalizedRadius * 2 - 1 * 2;
   const highlightBoxHeight = stageHeight - normalizedRadius * 2 - 1 * 2;
 
-  return `M${highlightBoxX},${highlightBoxY} h${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},${normalizedRadius} v${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},${normalizedRadius} h-${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},-${normalizedRadius} v-${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},-${normalizedRadius} z`;
+  return `M${highlightBoxX},${highlightBoxY} h${highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},${normalizedRadius} v${highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},${normalizedRadius} h${-highlightBoxWidth} a${normalizedRadius},${normalizedRadius} 0 0 1 -${normalizedRadius},${-normalizedRadius} v${-highlightBoxHeight} a${normalizedRadius},${normalizedRadius} 0 0 1 ${normalizedRadius},${-normalizedRadius} z`;
 }
 
 export function destroyOverlay() {
