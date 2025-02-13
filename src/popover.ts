@@ -96,7 +96,7 @@ export function renderPopover(element: Element, step: DriveStep) {
         ${totalIndex ? `<div class="progress"><span class="current">${currentIndex}</span> / ${totalIndex}</div>` : ''}
         <div class="desc">${description}</div>
         <div class="button-group">
-          <button class="done-button driver-popover-close-btn">${doneBtnText}</button>
+          <button class="done-button driver-popover-close-btn ${totalIndex && totalIndex == currentIndex ? `is-done` : ''}">${doneBtnText}</button>
           ${totalIndex && totalIndex != currentIndex ? `<button class="next-button driver-popover-next-btn">${nextBtnText}</button>` : ''}
         </div>
       </div>
