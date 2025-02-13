@@ -286,6 +286,10 @@
   border-radius: 20px;
   padding: 8px 16px;
 }
+.popover-body .button-group .done-button.is-done {
+  color: var(--ai-color-text-primary-1, #040809);
+  background-color: var(--ai-color-brand-normal-1, #45E555);
+}
 
 .popover-body .button-group .next-button {
   margin-left: 10px;

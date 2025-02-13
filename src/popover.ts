@@ -26,6 +26,7 @@ export type Popover = {
   // progressText?: string;
   doneBtnText?: string;
   nextBtnText?: string;
+  quitBtnText?: string;
   width?: string;
   // prevBtnText?: string;
 
@@ -81,6 +82,7 @@ export function renderPopover(element: Element, step: DriveStep) {
 
     nextBtnText = getConfig("nextBtnText") || "Next",
     doneBtnText = getConfig("doneBtnText") || "Done",
+    quitBtnText = getConfig("quitBtnText") || "Quit",
     // progressText = getConfig("progressText") || "{current} of {total}",
   } = step.popover || {};
 
@@ -96,7 +98,7 @@ export function renderPopover(element: Element, step: DriveStep) {
         ${totalIndex ? `<div class="progress"><span class="current">${currentIndex}</span> / ${totalIndex}</div>` : ''}
         <div class="desc">${description}</div>
         <div class="button-group">
-          <button class="done-button driver-popover-close-btn ${totalIndex && totalIndex == currentIndex ? `is-done` : ''}">${doneBtnText}</button>
+          <button class="done-button driver-popover-close-btn ${totalIndex && totalIndex == currentIndex ? `is-done` : ''}">${totalIndex && totalIndex == currentIndex ?doneBtnText : quitBtnText}</button>
           ${totalIndex && totalIndex != currentIndex ? `<button class="next-button driver-popover-next-btn">${nextBtnText}</button>` : ''}
         </div>
       </div>
