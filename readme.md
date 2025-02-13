@@ -4,6 +4,21 @@
 
 <br />
 
+## Features
+
+```js
+stageLeftPadding?: number;
+stageRightPadding?: number;
+stageBottomPadding?: number;
+stageRadius?: number;
+hightlightType?: EnumHightlightType;
+lineColor?: string;
+lineWidth?: string;
+lineMargin?: string;
+lineDashArray?: string;
+hiddenArrow?: boolean;
+```
+
 ## Documentation
 
 For demos and documentation, visit [driverjs.com](https://driverjs.com)
