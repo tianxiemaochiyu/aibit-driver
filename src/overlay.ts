@@ -11,6 +11,10 @@ export type StageDefinition = {
   height: number;
 };
 
+export function disableWheelEvent(event: Event) {
+  event.preventDefault();
+}
+
 // This method calculates the animated new position of the
 // stage (called for each frame by requestAnimationFrame)
 export function transitionStage(elapsed: number, duration: number, from: Element, to: Element) {
@@ -172,6 +176,8 @@ function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
     svg.appendChild(stageDashedPath);
   }
 
+  svg.addEventListener("wheel", disableWheelEvent, { passive: false })
+
   return svg;
 }
 
@@ -238,6 +244,7 @@ function generateDashedStageSvgPathString(stage: StageDefinition) {
 export function destroyOverlay() {
   const overlaySvg = getState("__overlaySvg");
   if (overlaySvg) {
+    overlaySvg.removeEventListener("wheel", disableWheelEvent)
     overlaySvg.remove();
   }
 }
