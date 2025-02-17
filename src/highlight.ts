@@ -42,6 +42,10 @@ export function highlight(step: DriveStep) {
   transferHighlight(elemObj, step);
 }
 
+export function disableWheelEvent(event: Event) {
+  event.preventDefault();
+}
+
 export function refreshActiveHighlight() {
   const activeHighlight = getState("__activeElement");
   const activeStep = getState("__activeStep")!;
@@ -162,6 +166,7 @@ function transferHighlight(toElement: Element, toStep: DriveStep) {
   const disableActiveInteraction = toStep.disableActiveInteraction ?? getConfig("disableActiveInteraction");
   if (disableActiveInteraction) {
     toElement.classList.add("driver-no-interaction");
+    document.addEventListener("wheel", disableWheelEvent, { passive: false })
   }
 
   toElement.classList.add("driver-active-element");
@@ -178,4 +183,5 @@ export function destroyHighlight() {
     element.removeAttribute("aria-expanded");
     element.removeAttribute("aria-controls");
   });
+  document.removeEventListener("wheel", disableWheelEvent)
 }
