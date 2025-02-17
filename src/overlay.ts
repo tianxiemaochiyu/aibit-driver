@@ -12,6 +12,7 @@ export type StageDefinition = {
 };
 
 export function disableWheelEvent(event: Event) {
+  console.log("overlay wheel!!")
   event.preventDefault();
 }
 

@@ -162,7 +162,6 @@ function transferHighlight(toElement: Element, toStep: DriveStep) {
   const disableActiveInteraction = toStep.disableActiveInteraction ?? getConfig("disableActiveInteraction");
   if (disableActiveInteraction) {
     toElement.classList.add("driver-no-interaction");
-    console.log(document.querySelector(".driver-overlay"))
   }
 
   toElement.classList.add("driver-active-element");
