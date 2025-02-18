@@ -177,7 +177,10 @@ function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
     svg.appendChild(stageDashedPath);
   }
 
-  svg.addEventListener("wheel", disableWheelEvent, { passive: false })
+  const isDisableActiveInteraction = getConfig("disableActiveInteraction")
+  if (isDisableActiveInteraction) {
+    document.addEventListener("wheel", disableWheelEvent, { passive: false })
+  }
 
   return svg;
 }
@@ -245,7 +248,12 @@ function generateDashedStageSvgPathString(stage: StageDefinition) {
 export function destroyOverlay() {
   const overlaySvg = getState("__overlaySvg");
   if (overlaySvg) {
-    overlaySvg.removeEventListener("wheel", disableWheelEvent)
     overlaySvg.remove();
   }
+  
+  const isDisableActiveInteraction = getConfig("disableActiveInteraction")
+  if (isDisableActiveInteraction) {
+    document.removeEventListener("wheel", disableWheelEvent)
+  }
+  
 }
